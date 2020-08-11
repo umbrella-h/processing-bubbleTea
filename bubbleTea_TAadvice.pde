@@ -38,7 +38,7 @@ Amplitude amp;
 
 PImage img;
 java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-//thinking about directly using diplayWidth & displayHeight...
+//thinking about directly using displayWidth & displayHeight...
 int displayWidth = screenSize.height*2/5;
 int displayHeight = screenSize.width*2/5;
 float w = parseFloat(displayWidth);
