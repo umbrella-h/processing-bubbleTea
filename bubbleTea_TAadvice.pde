@@ -23,11 +23,11 @@ while the radius and speed for each bubble are only related to the window size i
 2) keyboard: 'z'/ 'x' for the size of the bubbles and the straw.
              UP/ DOWN for the speed of the bubbles.
              
-2) mouse: 'Press' for catching bubbles.Catching multiple bubbles at the same time is enabled.
+3) mouse: 'Press' for catching bubbles.Catching multiple bubbles at the same time is enabled.
           Once a bubble is catched, the bubble deforms with its color changed.
           'Drag' for moving the catched bubbles around.
           
-3) AudioInput: While keeping the mouse pressed,
+4) AudioInput: While keeping the mouse pressed,
                make some long sound near your microphone to eat the bubbles!!!
                The Louder, the faster!
 */
