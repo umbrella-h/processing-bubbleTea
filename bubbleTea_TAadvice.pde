@@ -8,7 +8,7 @@
 /*
 -----Description-----
 
-An Interactive BubbleTea game.(For my mom's appetite :))
+An Interactive Bubbintea game.(For my mom's appetite :))
 
 Bubbles moving back and forth,
 with a random starting position, speed, color for each bubble.
@@ -38,7 +38,7 @@ Amplitude amp;
 
 PImage img;
 java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-//thinking about directly using displayWidth & displayHeight...
+//thinking about directly using diplayWidth & displayHeight...
 int displayWidth = screenSize.height*2/5;
 int displayHeight = screenSize.width*2/5;
 float w = parseFloat(displayWidth);
@@ -69,10 +69,11 @@ color[] cColor = new color[num];
 int[] pickInd = new int[num]; //thinking about if using Vector is better... 
 int releaseInd = -1;
 boolean isReleasing = false;
-boolean isTaken = false;
+boolean isTaking = false;
 //for releasing effect
 int delay = 0;
 int delayFrame = 15;
+float loud = 2E-2;
 
 /*void setting(){
   
@@ -142,7 +143,7 @@ void draw(){
     fill(cColor[i]);
     stroke(cColor[i]);
     cPosY[i] *= height/h;
-    if (isTaken == false){  //else: the catched bubble is deformed 
+    if (isTaking == false){  //else: the catched bubble is deformed 
       rW[i] = cRadius;
       rH[i] = cRadius;
     }
@@ -169,10 +170,10 @@ void draw(){
       cPosX[i] += cSpeed[i] * cDirection[i];
     }
     
-    if (isTaken == false){
+    if (isTaking == false || amp.analyze() <  loud){
       cEatSpeed[i] = 0;
     }
-    else if(amp.analyze()>5E-4 && pickInd[i] >= 0){
+    else if(amp.analyze()>loud && pickInd[i] >= 0){
       //cColor[i] = color(200, 100, 100, 255*amp.analyze()*10 + 60);
       cEatSpeed[i] = map(amp.analyze(), 0.0, 1.0, 0.0, 0.3*cRadius);        
     }
@@ -184,7 +185,7 @@ void draw(){
 
 void mousePressed(){
   println(mouseX, mouseY);
-  isTaken = true;
+  isTaking = true;
 
   for(int i=0; i<num; i++){
     if(dist(mouseX,mouseY,0,cPosX[i],cPosY[i],0) < 0.95 * rW[i]){
@@ -202,19 +203,65 @@ void mousePressed(){
 }
 
 void mouseDragged(){
-  int count = 0;
-  for(int i=0; i<num; i++){
-    if(pickInd[i] >= 0){      
-      cPosX[pickInd[i]] = mouseX;
-      cPosY[pickInd[i]] = mouseY - cRadius * count;
-      count++;
+  int countY = 0;
+  
+  //prevent draging the bubbles outside of the cup
+  
+  //mousrY
+  if(mouseY < 5*bd){
+    for(int i=0; i<num; i++){
+      if(pickInd[i] >= 0){
+          cPosY[pickInd[i]] = 5*bd - cRadius * countY;
+          countY++;
+      }
     }
+  }
+  else if(mouseY > displayHeight-2*bd){
+    for(int i=0; i<num; i++){
+      if(pickInd[i] >= 0){
+          cPosY[pickInd[i]] = displayHeight -2*bd - cRadius * countY;
+          countY++;
+      }
+    } 
+  }
+  else{
+    if(!(amp.analyze()>loud && isTaking == true)){
+      for(int i=0; i<num; i++){
+        if(pickInd[i] >= 0 && cPosY[pickInd[i]] > -bd){
+            cPosY[pickInd[i]] = mouseY - cRadius * countY;
+            countY++;
+        }
+      }
+    }
+  }
+  
+  //mouseX
+  if(mouseX > displayWidth-bd){
+    for(int i=0; i<num; i++){
+        if(pickInd[i] >= 0){
+          cPosX[pickInd[i]] = displayWidth-bd;
+        }
+     }
+  }
+  else if(mouseX < bd){
+    for(int i=0; i<num; i++){
+        if(pickInd[i] >= 0){
+          cPosX[pickInd[i]] = bd;
+        }
+     }
+  }
+  else{
+    for(int i=0; i<num; i++){
+         if(pickInd[i] >= 0){
+          cPosX[pickInd[i]] = mouseX;
+        }
+     }
   }
 }
 
 void mouseReleased(){
   isReleasing = true;  
-  isTaken = false;
+  isTaking = false;
   delay = delayFrame;
   for(int i=0; i<num; i++){
     if(pickInd[i] >= 0){
