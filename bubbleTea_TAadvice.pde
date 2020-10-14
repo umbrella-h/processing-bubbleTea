@@ -151,7 +151,7 @@ void draw(){
      
     //When a circle is very near to the boundary
     //and the user resize the window between frames,
-    //the circle could be stucked.
+    //the circle could be stuck.
     //so here we check if the circle happened to be stucked. 
     if(cPosX[i]>= width-bd){
        cSpeed[i] = - abs(cSpeed[i]);
